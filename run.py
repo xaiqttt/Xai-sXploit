@@ -23,7 +23,7 @@ def banner():
     os.system("clear")
     print(f"""{G}
 ╔════════════════════════════════════╗
-║    HACKER TOOL - REVERSE SHELL     ║
+║     CAPTIV8 - REVERSE SHELL        ║
 ║        by xaiqttt | 2025           ║
 ╚════════════════════════════════════╝{RESET}
 """)
