@@ -1,4 +1,4 @@
-# Hacker Tool - Fake Web Exploit with Reverse Shell
+# CAPTIV8 – CAPTCHA-Based Social Engineering with Reverse Shell Injection
 
 A social engineering tool that hosts a fake web page (e.g. CAPTCHA or update prompt) to trick victims into executing a reverse shell payload. The page uses clipboard hijacking to preload the reverse shell command, which the victim unknowingly pastes and runs.
 
